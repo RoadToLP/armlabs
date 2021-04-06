@@ -1,7 +1,6 @@
-int add(int a, int b){
-	return a+b;
+unsigned int kek(unsigned int a){
+	return a;
 }
-
-int sub(int a, int b){
-	return a-b;
+int main(){
+	return kek(0xdeadbeef);
 }

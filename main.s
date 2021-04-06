@@ -1,16 +1,16 @@
-#include "lib/lib.s"
+#include "lib/lib.h"
 	.text
-	.globl	main
+	.globl	_start
 	.p2align 2
 	.type main,@function
-main:
-	MOV X0, #1234
-	LDR X1, =s
+_start:
+	SUB	SP, SP, #8
+	MOV 	X0, #0xbeef
+	MOVK	X0, #0xdead, lsl #16
+	MOV 	X1, SP
 	BL	itos
 	BL	print
-	RET
+	MOV	X0, #0
+	BL	exit
 .Lfunc_end0:
-	.size main, .Lfunc_end0-main
-	.type s, @object
-	.comm s, 8, 1
-
+	.size _start, .Lfunc_end0-_start
