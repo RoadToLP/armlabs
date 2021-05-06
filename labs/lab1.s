@@ -1,4 +1,4 @@
-#include "lib/lib.h"
+#include <lib.h>
 
 /*	Expression
  *	(a*c)/d+(d*b)/e-c^2/(a*d)
