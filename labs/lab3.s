@@ -11,11 +11,28 @@ _start:
 	MOV	X0, XZR
 	MOV	X2, 256
 	BL	read
+
+
+	POP	X0
+	PUSH	X0
+	MOV	X1, ' '
+	BL	strcnt
+	MOV	X3, X0
+
+
 	POP	X0
 	MOV	X1, ' '
 	ADRP	X2, splitted
 	ADD	X2, X2, :lo12:splitted
+	PUSH 	X2
 	BL	strsplit
+	MOV	X1, X3
+	MOV	X2, ' '
+	ADRP	X3, processed
+	ADD	X3, X3, :lo12:processed
+	BL	strmerge
+	BL 	puts
+
 	MOV	X0, XZR
 	BL	exit
 
@@ -29,7 +46,8 @@ _start:
 	.type splitted, @object
 	.comm splitted, 0x1000, 1
 
-
+	.type processed, @object
+	.comm processed, 256, 1
 
 	.type countme, @object
 	.comm countme, 256, 1

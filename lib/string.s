@@ -208,6 +208,8 @@ strsplit:
 	MOV	X0, X21
 	MOV	X1, X22
 	BL	makeArray64 //Create an array
+	CMP	X22, #0
+	BEQ 	strsplit_ret
 	MOV	X23, X21
 	PUSH	X22
 	MOV	X24, #8
@@ -257,7 +259,75 @@ strsplit_ret:
 	.size strsplit, .strsplit_end-strsplit
 
 
+/* strcpy - copy string to pointer. Returns number of copyed bytes
+ * X0 - where to
+ * X1 - what to
+ */
+ 	.p2align 2
+	.globl strcpy
+	.type strcpy, @function
+strcpy:
+	PUSHTEMP
+	MOV	X19, X0
+	MOV	X20, X1
+	MOV	X28, XZR
+strcpy_loop:
+	LDRB	W21, [X20]
+	CMP	X21, #0
+	BEQ 	strcpy_ret
+	STRB	W21, [X19]
+	INC	X20
+	INC	X19
+	INC	X28
+	B 	strcpy_loop
+strcpy_ret:
+	MOV	X0, X28
+	POPTEMP
+	RET
+.strcpy_end:
+	.size	strcpy, .strcpy_end-strcpy
 	
+
+
+/* strmerge - opposite of strsplit.	
+ * X0 - array of strings
+ * X1 - size of array
+ * X2 - delimiter
+ * X3 - string to place
+ */
+ 	.p2align 2
+	.globl strmerge
+	.type strmerge, @function
+strmerge:
+	PUSHTEMP
+	CMP 	X1, #0
+	BEQ	strmerge_ret
+	MOV	X19, X0
+	MOV	X20, X1
+	MOV	X21, X2
+	MOV	X22, X3
+	MOV	X23, XZR
+strmerge_loop:
+	MOV	X0, X19
+	MOV	X1, X23
+	BL	getArr64Element
+	MOV	X1, X0
+	MOV	X0, X22
+	BL	strcpy
+	INC	X23
+	CMP	X23, X20
+	BEQ	strmerge_ret
+	ADD	X22, X22, X0
+	STRB	W21, [X22]
+	INC	X22
+	B 	strmerge_loop
+strmerge_ret:
+	MOV	X0, X3
+	POPTEMP
+	RET
+.strmerge_end:
+	.size	strmerge, .strmerge_end-strmerge
+
 
 
 	

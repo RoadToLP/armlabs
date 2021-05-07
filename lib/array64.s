@@ -7,6 +7,8 @@
 	.type makeArray64, @function
 makeArray64:
 	PUSHTEMP
+	CMP	X1, #0
+	BEQ	makeArray64_ret
 	MOV	X19, X0
 	MOV	X20, X1
 	MOV	W21, #0
@@ -17,6 +19,7 @@ cycle:
 	CMP	X20, #0
 	BNE	cycle
 	MOV	X0, X19
+makeArray64_ret:
 	POPTEMP
 	RET
 
