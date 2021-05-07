@@ -11,6 +11,7 @@ sort:
 	PUSHTEMP
 	MOV X19, X0
 	MOV X20, X1
+	DEC X20
 	MOV X21, #1 // X21 means that array is sorted
 	MOV X23, 0
 	MOV X24, 0

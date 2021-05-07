@@ -10,9 +10,6 @@ itos:
 	PUSHTEMP
 	MOV	X22, X1
 	MOV	X19, #10
-	MOV	W21, 0xa
-	STRB	W21, [X22]
-	ADD	X22, X22, #1
 .itos_0:
 	UDIV	X20, X0, X19 
 	MUL	X21, X20, X19
@@ -85,6 +82,8 @@ revstr:
 	DEC	X20		//And move it to the end
 	ASR	X21, X21, #1	//Divide string length by 2
 	MOV	X22, X19
+	CMP	X21, #0
+	BEQ	.revstr_1
 .revstr_0:
 	MOV	X0, X19
 	MOV	X1, X20
@@ -103,7 +102,8 @@ revstr:
 .Lfunc_end3:
 	.size revstr, .Lfunc_end3-revstr
 
-//stoi - fuck my ass
+//stoi - takes X0 as ptr to string and returns integer (yeah it overflows, but who doesn't?)
+//returns zero if incorrect symbol found
 
 	.p2align 2
 	.globl stoi
@@ -121,15 +121,21 @@ stoi_loop:
 	DEC 	X20
 	DEC	X19
 	LDRB	W22, [X19]
-	CMP	W22, 0xA
+	CMP	W22, #0xA
 	BEQ	stoi_final
-	SUB	X22, X22, 0x30
+	SUB	X22, X22, #0x30
+	CMP	X22, #10
+	BGE	stoi_fail
 	MUL	X22, X22, X23
 	ADD 	X0, X0, X22
 	MUL	X23, X23, X24
 stoi_final:
 	CMP 	X20, #0
 	BNE 	stoi_loop
+	B 	stoi_ret
+stoi_fail:
+	MOV	X0, #0
+stoi_ret:
 	POPTEMP
 	RET
 .stoi_end:
