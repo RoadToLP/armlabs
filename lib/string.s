@@ -14,9 +14,9 @@ itos:
 	STRB	W21, [X22]
 	ADD	X22, X22, #1
 .itos_0:
-	SDIV	X20, X0, X19 
+	UDIV	X20, X0, X19 
 	MUL	X21, X20, X19
-	SUBS	X21, X0, X21
+	SUB	X21, X0, X21
 	ADD	X21, X21, #0x30 //X21 = X0%10 + 0X30
 	STRB	W21, [X22]
 	MOV	X0, X20 //X0 = X0/10
@@ -71,7 +71,6 @@ swapb:
 
 	
 //revstr - reverse string
-	.text
 	.globl revstr
 	.p2align 2
 	.type revstr, @function
@@ -103,3 +102,35 @@ revstr:
 
 .Lfunc_end3:
 	.size revstr, .Lfunc_end3-revstr
+
+//stoi - fuck my ass
+
+	.p2align 2
+	.globl stoi
+	.type stoi, @function
+stoi:
+	PUSHTEMP
+	MOV	X19, X0
+	BL	strlen
+	MOV	X20, X0
+	MOV	X0, #0
+	MOV 	X23, #1
+	MOV	X24, #10
+	ADD	X19, X19, X20
+stoi_loop:
+	DEC 	X20
+	DEC	X19
+	LDRB	W22, [X19]
+	CMP	W22, 0xA
+	BEQ	stoi_final
+	SUB	X22, X22, 0x30
+	MUL	X22, X22, X23
+	ADD 	X0, X0, X22
+	MUL	X23, X23, X24
+stoi_final:
+	CMP 	X20, #0
+	BNE 	stoi_loop
+	POPTEMP
+	RET
+.stoi_end:
+	.size stoi, .stoi_end-stoi
