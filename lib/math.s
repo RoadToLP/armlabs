@@ -19,3 +19,21 @@ pow:
         RET
 .Lfunc_end6:
         .size pow, .Lfunc_end6-pow
+
+
+//mod - return remainder. X0 - dividend, X1, divisor
+	.globl mod
+	.p2align 2
+	.type mod, @function
+mod:
+	PUSHTEMP
+	MOV	X19, X0
+	MOV	X20, X1
+	SDIV	X19, X19, X20
+	MUL	X19, X19, X20
+	SUB	X0, X0, X19
+	POPTEMP
+	RET
+.mod_end:
+	.size mod, .mod_end-mod
+

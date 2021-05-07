@@ -51,7 +51,7 @@ _start:
 	SUB	X0, X0, X26
 	MOV	X1, SP
 	BL	itos
-	BL	print
+	BL	puts
 	MOV	X0, #0
 	BL	exit
 
