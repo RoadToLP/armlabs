@@ -32,7 +32,7 @@ genMatrix_loop:
 	STUR	X22, [X19]
 	MOV	X0, X22
 	MOV	X1, X21
-	BL 	makeArray 	//array is initialized
+	BL 	makeArray16 	//array is initialized
 	MOV	X22, X0		//new offset
 	DEC	X20
 	CMP	X20, #0
@@ -58,7 +58,7 @@ sortMatrix:
 sortMatrix_loop:
 	LDR	X0, [X19]
 	MOV	X1, X21
-	BL	sort
+	BL	sort16
 	ADD	X19, X19, #8
 	DEC	X20
 	CMP 	X20, #0

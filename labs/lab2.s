@@ -38,7 +38,7 @@ rowCycle:
 		MOV	X2, X0
 		MOV 	X0, X21
 		MOV	X1, X20
-		BL	setArrElement
+		BL	setArr16Element
 		INC	X20
 		CMP	X20, X23
 		BNE 	columnCycle
@@ -63,7 +63,7 @@ outRow:
 		LDR	X19, [X0]
 		MOV	X0, X19
 		MOV	X1, X20
-		BL	getArrElement
+		BL	getArr16Element
 		BL	printInt
 		ADRP 	X0, delim
 		ADD	X0, X0, :lo12:delim

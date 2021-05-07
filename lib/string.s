@@ -139,3 +139,127 @@ stoi_ret:
 	RET
 .stoi_end:
 	.size stoi, .stoi_end-stoi
+
+
+//strcnt - count how many words are in string, with specified delimiter
+//X0 - string
+//X1 - delimiter
+//If delimiter is, for example, ';', then "aboba;;;;bobaboba" will be treated as 2 words (repetative delimiters should be skipped)
+	.globl strcnt
+	.p2align 2
+	.type strcnt, @function
+strcnt:
+	PUSHTEMP
+	MOV	X19, X0
+	MOV	X20, X1
+	MOV	X21, XZR  //count
+	MOV	X28, 1  //trigger flag
+
+strcnt_loop:
+	LDRB	W22, [X19]
+	CMP	X22, #0
+	BEQ	strcnt_ret
+	CMP	X22, '\n' //get that \n out there
+	BEQ	strcnt_delim
+	CMP	X22, X20
+	BNE	strcnt_default
+strcnt_delim:
+	CMP	X28, #1
+	BEQ	strcnt_final
+	MOV	X28, #1
+	B	strcnt_final
+strcnt_default:
+	CMP	X28, #1
+	BNE	strcnt_final
+	MOV	X28, #0
+	INC	X21
+strcnt_final:
+	INC	X19
+	B	strcnt_loop
+strcnt_ret:
+	MOV	X0, X21
+	POPTEMP
+	RET
+.strcnt_end:
+	.size	strcnt, .strcnt_end-strcnt
+
+
+
+
+
+
+/* strsplit - returns pointer to Array64 of pointers to strings
+ * So first, we should understand how much words are in our string
+ * We will use internal function named strcnt
+ * X0 - string
+ * X1 - delimiter
+ * X2 - place where to make array
+ */
+ 	.p2align 2
+	.globl strsplit
+	.type strsplit, @function
+strsplit:
+	PUSHTEMP
+	MOV	X19, X0
+	MOV	X20, X1
+	MOV	X21, X2
+	BL	strcnt 	//we have length of array
+	MOV	X22, X0
+	MOV	X0, X21
+	MOV	X1, X22
+	BL	makeArray64 //Create an array
+	MOV	X23, X21
+	PUSH	X22
+	MOV	X24, #8
+	MUL	X22, X22, X24
+	ADD	X23, X23, X22
+	POP 	X22
+	MOV	X24, #1
+	MOV	X26, #1
+	MOV	X0, X21
+	MOV	X1, #0
+	MOV	X2, X23
+	BL	setArr64Element
+strsplit_loop:
+	LDRB	W25, [X19]
+	CMP	X25, #0
+	BEQ	strsplit_ret
+	CMP	X25, '\n'
+	BEQ	strsplit_delim
+	CMP	X25, X20
+	BNE	strsplit_default
+strsplit_delim:
+	CMP	X24, #1
+	BEQ	strsplit_final
+	STRB	WZR, [X23]
+	INC	X23
+	CMP	X26, X22
+	BEQ	strsplit_final
+	MOV	X0, X21
+	MOV	X1, X26
+	MOV	X2, X23
+	BL	setArr64Element
+	INC	X26
+	MOV	X24, #1
+	B	strsplit_final
+strsplit_default:
+	MOV	X24, XZR
+	STRB	W25, [X23]
+	INC	X23
+strsplit_final:
+	INC	X19
+	B	strsplit_loop
+strsplit_ret:
+	MOV	X0, X21
+	POPTEMP
+	RET
+.strsplit_end:
+	.size strsplit, .strsplit_end-strsplit
+
+
+	
+
+
+	
+
+
