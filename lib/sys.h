@@ -1,1 +1,0 @@
-void exit(unsigned int);

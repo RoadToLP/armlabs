@@ -1,4 +1,3 @@
-#include <random.h>
 .include "asm/macro.s"
 //rand - returns random number from /dev/urandom
 .urandom:

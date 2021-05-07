@@ -1,4 +1,3 @@
-#include <array.h>
 .include "asm/macro.s"
 
 //makeArray - initialize array at location. X0 - location, X1 - length. (ocasionally, we use 16 bit array, so here we go)

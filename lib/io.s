@@ -1,5 +1,3 @@
-#include <string.h>
-#include <io.h>
 .include "asm/macro.s"
 //puts - print a string to it's '\0' to stdout
         .globl puts

@@ -1,4 +1,3 @@
-#include "string.h"
 .include "asm/macro.s"
 
 	.text

@@ -1,4 +1,3 @@
-#include <math.h>
 .include "./asm/macro.s"
 //pow - return power of integer
         .globl pow

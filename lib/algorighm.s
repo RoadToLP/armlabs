@@ -1,5 +1,3 @@
-#include <algorithm.h>
-#include <array.h>
 .include "asm/macro.s"
 
 	.text

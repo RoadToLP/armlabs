@@ -1,4 +1,3 @@
-#include <sys.h>
 //exit - exit
         .globl exit
         .p2align 2
