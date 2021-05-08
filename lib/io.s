@@ -23,11 +23,18 @@ puts:
 	.type open, @function
 open:
 	PUSHTEMP
+	MOV	X3, X2
 	MOV	X2, X1
 	MOV	X1, X0
 	MOV	X0, #-100
 	MOV	X8, #0x38
 	SVC	#0
+	MOV	X19, X0
+	LSR	X19, X19, 63
+	CMP	X19, #1
+	BNE	open_ret
+	MOV	X0, #-1
+open_ret:
 	POPTEMP
 	RET
 .open_end:

@@ -228,6 +228,8 @@ strsplit_loop:
 	BEQ	strsplit_ret
 	CMP	X25, '\n'
 	BEQ	strsplit_delim
+	CMP	X25, '\t'
+	BEQ	strsplit_delim
 	CMP	X25, X20
 	BNE	strsplit_default
 strsplit_delim:
@@ -307,10 +309,20 @@ strmerge:
 	MOV	X21, X2
 	MOV	X22, X3
 	MOV	X23, XZR
+	MOV	X24, XZR	//This will signalize that last word was skipped
 strmerge_loop:
 	MOV	X0, X19
 	MOV	X1, X23
 	BL	getArr64Element
+	CMP	X0, #0
+	BNE	strmerge_cont
+	INC	X23
+	MOV	X24, #1
+	CMP	X23, X20
+	BEQ 	strmerge_ret
+	B	strmerge_loop
+strmerge_cont:
+	MOV	X24, #0
 	MOV	X1, X0
 	MOV	X0, X22
 	BL	strcpy
@@ -322,6 +334,11 @@ strmerge_loop:
 	INC	X22
 	B 	strmerge_loop
 strmerge_ret:
+	CMP	X24, #0
+	BEQ	strmerge_realret
+	DEC	X22
+	STRB	WZR, [X22]
+strmerge_realret:
 	MOV	X0, X3
 	POPTEMP
 	RET
@@ -331,5 +348,28 @@ strmerge_ret:
 
 
 	
-
-
+/* memset - fill memory with constant byte
+ * X0 - Where
+ * X1 - With
+ * X2 - How many
+ */
+ 	.p2align 2
+	.globl memset
+	.type memset, @function
+memset:
+	PUSHTEMP
+	MOV	X19, X0
+	MOV	X20, X1
+	MOV	X21, X2
+memset_loop:
+	CMP	X21, #0
+	BEQ	memset_ret
+	STRB	W1, [X19]
+	DEC	X21
+	INC	X19
+	B	memset_loop
+memset_ret:
+	POPTEMP
+	RET
+.memset_end:
+	.size memset, .memset_end-memset
