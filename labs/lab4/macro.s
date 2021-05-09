@@ -18,6 +18,16 @@
 .set S_IXOTH, 0000001    /* X for other */
 
 
+.macro FUNCTION_DEFINE,	FUNC
+	.globl \FUNC
+	.p2align 2
+	.type \FUNC, @function
+.endmacro
+
+.macro FUNCTION_END, FUNC
+.\FUNC\()_end:
+	.size \FUNC, .\FUNC\()_end-\FUNC
+.endmacro
 
 .macro	INC, REG
 	ADD 	\REG, \REG, #1
@@ -61,9 +71,11 @@
 	PUSH	D26
 	PUSH	D27
 	PUSH	D28
+	PUSH	D29
 .endmacro
 
 .macro	POPTEMP
+	POP	D29
 	POP	D28
 	POP	D27
 	POP	D26
