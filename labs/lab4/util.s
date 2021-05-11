@@ -55,13 +55,27 @@ customTan_cycle:
 	POPTEMP
 	FMUL	D21, D21, D0 	//D21  - D21 * x^(2n-1)
 	FADD	D28, D28, D21	
-	ADR	X0, fresult
-	MOV	X1, X28
+	ADR	X0, result
+	MOV	X1, #127
+	ADR	X2, fresult
+	MOV	X3, X28
 	FMOV	D0, D19
 	FMOV	D1, D28
 	FMOV	D2, D21
-	BL	printf
-	FCMP	D21, D20
+	PUSHTEMP
+	BL	snprintf
+	POPTEMP
+	MOV	X0, X19
+	ADR	X1, result
+	MOV	X2, #127
+	PUSHTEMP
+	BL	write
+	POPTEMP
+	FMOV	D0, D21
+	PUSHTEMP
+	BL	fabs
+	POPTEMP
+	FCMP	D0, D20
 	BLE	customTan_ret
 	INC	X28
 	B	customTan_cycle

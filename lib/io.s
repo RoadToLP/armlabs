@@ -1,8 +1,7 @@
 .include "asm/macro.s"
 //puts - print a string to it's '\0' to stdout
-        .globl puts
-        .p2align 2
-        .type puts, @function
+	.text
+FUNCTION_DEFINE puts
 puts:
         PUSHTEMP
         MOV     X19, X0
@@ -14,13 +13,10 @@ puts:
         SVC     #0
         POPTEMP
         RET
-.Lfunc_end4:
-        .size puts, .Lfunc_end4-puts
+FUNCTION_END	puts
 
 //open - open file and return fd. X0 - filename, X1 - flags
-	.globl open
-	.p2align 2
-	.type open, @function
+FUNCTION_DEFINE	open
 open:
 	PUSHTEMP
 	MOV	X3, X2
@@ -37,53 +33,40 @@ open:
 open_ret:
 	POPTEMP
 	RET
-.open_end:
-	.size open, .open_end-open
-	
+FUNCTION_END	open
 
 //read - reads X2 bytes from X0 fd to X1 string.
-	.globl read
-	.p2align 2
-	.type read, @function
+FUNCTION_DEFINE read
 read:
 	PUSHTEMP
 	MOV	X8, #0x3f
 	SVC	#0
 	POPTEMP
 	RET
-.read_end:
-	.size read, .read_end-read
-	
+FUNCTION_END	read
+
 //write - writes X2 bytes to X0 fd from X1 string
-	.globl write
-	.p2align 2
-	.type write, @function
+FUNCTION_DEFINE write
 write:
 	PUSHTEMP
 	MOV	X8, #0x40
 	SVC 	#0
 	POPTEMP
 	RET
-.write_end:
-	.size write, .write_end-write
+FUNCTION_END	write
 
 //close - closes X0 fd
-	.globl close
-	.p2align 2
-	.type close, @function
+FUNCTION_DEFINE close
 close:
 	PUSHTEMP
 	MOV	X8, #0x39
 	SVC	#0
 	POPTEMP
 	RET
-.close_end:
-	.size close, .close_end-close
+FUNCTION_END	close
 
 //nextInt - asks for input and returns number(can get only 23 bytes of input)
-	.globl nextInt
-	.p2align 2
-	.type nextInt, @function
+FUNCTION_DEFINE	nextInt
 nextInt:
 	PUSHTEMP
 	EOR	X0, X0, X0
@@ -99,13 +82,10 @@ nextInt:
 	ADD	SP, SP, #0x18
 	POPTEMP
 	RET
-.nextInt_end:
-	.size	nextInt, .nextInt_end-nextInt
+FUNCTION_END	nextInt
 
 //printInt - basically, just a wrapper for itos and print, just making it better. X0 contains numba
-	.globl printInt
-	.p2align 2
-	.type printInt, @function
+FUNCTION_DEFINE printInt
 printInt:
 	PUSHTEMP
 	MOV	X19, X0
@@ -116,8 +96,7 @@ printInt:
 	ADD	SP, SP, #0x18
 	POPTEMP
 	RET
-.printInt_end:
-	.size	printInt, .printInt_end-printInt
+FUNCTION_END	printInt
 
 
 

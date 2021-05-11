@@ -1,8 +1,6 @@
 .include "./asm/macro.s"
 //pow - return power of integer
-        .globl pow
-        .p2align 2
-        .type pow, @function
+FUNCTION_DEFINE pow
 pow:
         PUSHTEMP
         MOV     X19, X0
@@ -22,14 +20,10 @@ powFail:
 	MOV	X0, XZR
 	POPTEMP
 	RET
-.Lfunc_end6:
-        .size pow, .Lfunc_end6-pow
-
+FUNCTION_END	pow
 
 //mod - return remainder. X0 - dividend, X1, divisor
-	.globl mod
-	.p2align 2
-	.type mod, @function
+FUNCTION_DEFINE	mod
 mod:
 	PUSHTEMP
 	MOV	X19, X0
@@ -39,6 +33,5 @@ mod:
 	SUB	X0, X0, X19
 	POPTEMP
 	RET
-.mod_end:
-	.size mod, .mod_end-mod
+FUNCTION_END	mod
 

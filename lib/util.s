@@ -2,9 +2,7 @@
 /* isPalindrome - checks if string is palindrome
  * X0 - pointer to string
  */
- 	.p2align 2
-	.globl isPalindrome
-	.type isPalindrome, @function
+FUNCTION_DEFINE isPalindrome
 isPalindrome:
 	PUSHTEMP
 	MOV	X19, X0
@@ -30,7 +28,5 @@ isPalindrome_failret:
 isPalindrome_ret:
 	POPTEMP
 	RET
-.isPalindrome_end:
-	.size isPalindrome, .isPalindrome_end-isPalindrome
-
+FUNCTION_END	isPalindrome
 

@@ -1,10 +1,8 @@
 .include "asm/macro.s"
 
 	.text
-	.p2align 2
-	.globl sort16
-	.type sort16, @function
 //sort16 - sorts an array of halfwords in ascending order. Takes X0 as array pointer and X1 as array length
+FUNCTION_DEFINE	sort16
 sort16:
 	PUSHTEMP
 	MOV X19, X0
@@ -48,9 +46,7 @@ main_sort16:
 	MOV	X0, X19
 	POPTEMP
 	RET
-.sort16_end:
-	.size sort16, .sort16_end-sort16
-
+FUNCTION_END	sort16
 		
 		
 		

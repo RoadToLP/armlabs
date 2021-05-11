@@ -8,9 +8,7 @@
 
 
 	.text
-	.p2align 2
-	.globl rand
-	.type rand, @function
+FUNCTION_DEFINE	rand
 rand:
 	PUSHTEMP
 	ADRP	X0, .urandom
@@ -24,6 +22,4 @@ rand:
 	LDR	X0, [X1]
 	POPTEMP
 	RET
-.rand_end:
-	.size rand, .rand_end-rand
-
+FUNCTION_END	rand

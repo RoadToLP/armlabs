@@ -1,9 +1,7 @@
 .include "asm/macro.s"
 
 	.text
-	.globl itos
-	.p2align 2
-	.type itos, @function
+FUNCTION_DEFINE itos
 //itos - convert integer to char*
 itos:	
 	PUSHTEMP
@@ -25,13 +23,10 @@ itos:
 	BL	revstr
 	POPTEMP
 	RET
-.Lfunc_end0:
-	.size itos, .Lfunc_end0-itos
+FUNCTION_END	itos
 
 //strlen - calculare string length
-	.globl strlen
-	.p2align 2
-	.type strlen, @function
+FUNCTION_DEFINE strlen
 strlen:
 	PUSHTEMP
 	MOV	X19, X0		//Copy original pointer and work with copy
@@ -46,14 +41,10 @@ strlen:
 	MOV	X0, X19		//Move it to return register
 	POPTEMP
 	RET
-.Lfunc_end1:
-	.size strlen, .Lfunc_end1-strlen
+FUNCTION_END	strlen
 //swapb - swap two bytes. Takes two pointers
 
-	.globl swapb
-	.p2align 2
-	.type swapb, @function
-
+FUNCTION_DEFINE	swapb
 swapb:
 	PUSHTEMP
 	LDRB	W19, [X0]	//Take first byte
@@ -62,15 +53,10 @@ swapb:
 	STRB	W19, [X1]	//Save first byte in second ptr
 	POPTEMP
 	RET
-.Lfunc_end2:
-	.size swapb, .Lfunc_end2-swapb
-
+FUNCTION_END	swapb
 	
 //revstr - reverse string
-	.globl revstr
-	.p2align 2
-	.type revstr, @function
-
+FUNCTION_DEFINE revstr
 revstr:
 	PUSHTEMP
 	MOV	X19, X0		//Save original pointer
@@ -98,15 +84,11 @@ revstr:
 	POPTEMP
 	RET
 
-.Lfunc_end3:
-	.size revstr, .Lfunc_end3-revstr
-
+FUNCTION_END	revstr
 //stoi - takes X0 as ptr to string and returns integer (yeah it overflows, but who doesn't?)
 //returns zero if incorrect symbol found
 
-	.p2align 2
-	.globl stoi
-	.type stoi, @function
+FUNCTION_DEFINE stoi
 stoi:
 	PUSHTEMP
 	MOV	X19, X0
@@ -137,17 +119,13 @@ stoi_fail:
 stoi_ret:
 	POPTEMP
 	RET
-.stoi_end:
-	.size stoi, .stoi_end-stoi
-
+FUNCTION_END	stoi
 
 //strcnt - count how many words are in string, with specified delimiter
 //X0 - string
 //X1 - delimiter
 //If delimiter is, for example, ';', then "aboba;;;;bobaboba" will be treated as 2 words (repetative delimiters should be skipped)
-	.globl strcnt
-	.p2align 2
-	.type strcnt, @function
+FUNCTION_DEFINE	strcnt
 strcnt:
 	PUSHTEMP
 	MOV	X19, X0
@@ -180,9 +158,7 @@ strcnt_ret:
 	MOV	X0, X21
 	POPTEMP
 	RET
-.strcnt_end:
-	.size	strcnt, .strcnt_end-strcnt
-
+FUNCTION_END	strcnt
 
 
 
@@ -195,9 +171,7 @@ strcnt_ret:
  * X1 - delimiter
  * X2 - place where to make array
  */
- 	.p2align 2
-	.globl strsplit
-	.type strsplit, @function
+FUNCTION_DEFINE	strsplit
 strsplit:
 	PUSHTEMP
 	MOV	X19, X0
@@ -257,17 +231,13 @@ strsplit_ret:
 	MOV	X0, X21
 	POPTEMP
 	RET
-.strsplit_end:
-	.size strsplit, .strsplit_end-strsplit
-
+FUNCTION_END	strsplit
 
 /* strcpy - copy string to pointer. Returns number of copyed bytes
  * X0 - where to
  * X1 - what to
  */
- 	.p2align 2
-	.globl strcpy
-	.type strcpy, @function
+FUNCTION_DEFINE strcpy
 strcpy:
 	PUSHTEMP
 	MOV	X19, X0
@@ -286,8 +256,7 @@ strcpy_ret:
 	MOV	X0, X28
 	POPTEMP
 	RET
-.strcpy_end:
-	.size	strcpy, .strcpy_end-strcpy
+FUNCTION_END	strcpy
 	
 
 
@@ -297,9 +266,7 @@ strcpy_ret:
  * X2 - delimiter
  * X3 - string to place
  */
- 	.p2align 2
-	.globl strmerge
-	.type strmerge, @function
+FUNCTION_DEFINE strmerge
 strmerge:
 	PUSHTEMP
 	CMP 	X1, #0
@@ -342,9 +309,7 @@ strmerge_realret:
 	MOV	X0, X3
 	POPTEMP
 	RET
-.strmerge_end:
-	.size	strmerge, .strmerge_end-strmerge
-
+FUNCTION_END	strmerge
 
 
 	
@@ -353,9 +318,7 @@ strmerge_realret:
  * X1 - With
  * X2 - How many
  */
- 	.p2align 2
-	.globl memset
-	.type memset, @function
+FUNCTION_DEFINE memset
 memset:
 	PUSHTEMP
 	MOV	X19, X0
@@ -371,5 +334,4 @@ memset_loop:
 memset_ret:
 	POPTEMP
 	RET
-.memset_end:
-	.size memset, .memset_end-memset
+FUNCTION_END	memset

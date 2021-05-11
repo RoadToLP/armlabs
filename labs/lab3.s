@@ -17,7 +17,7 @@ argc_pass:
 	POP	X0		//executable name
 	POP	X0		//File to open
 	SUB	SP, SP, #24 	//Recover stack (why?)
-	MOV	X1, O_WRONLY | O_CREAT
+	MOV	X1, O_WRONLY | O_CREAT | O_TRUNC
 	MOV	X2, S_IRUSR | S_IWUSR | S_IRGRP
 	BL	open
 	CMP	X0, #-1		//check if file can't be opened
@@ -42,6 +42,10 @@ open_pass:			//now we are talking
 	 */
 	MOV	X28, X0		//Save an fd. Pretty useless, because it is 3, but just to be safe
 	MOV	X10, #0		//Will be used as trigger if string is null-terminated
+	//Tell user what we want from them
+	ADRP	X0, help
+	ADD	X0, X0, :lo12:help
+	BL	puts
 
 main_loop:
 	MOV	X0, #0
@@ -139,11 +143,25 @@ fail:
 success:
 	MOV	X0, X28
 	BL	close
+	ADRP	X0, farewell
+	ADD	X0, X0, :lo12:farewell
+	BL	puts
 	MOV	X0, XZR
 	BL	exit
 
 ._start_end:
 	.size _start, ._start_end-_start
+
+
+help:
+	.asciz "[+] File opened for writing\nNow please enter lines to format. You can stop entering data by pressing Ctrl+D whenever you want.\n"
+.help_end:
+	.size help,  .help_end-help
+
+farewell:
+	.asciz "\n[+] Formatted data had been written to your file.\nSee you next time ;)\n"
+.farewell_end:
+	.size farewell, .farewell_end-farewell
 
 usage:
 	.asciz "Usage: ./lab3 <file>\n\0"

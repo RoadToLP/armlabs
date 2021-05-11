@@ -2,6 +2,7 @@
 .set	O_WRONLY,	1
 .set	O_RDWR,		2
 .set 	O_CREAT,	64
+.set 	O_TRUNC,	01000
 .set S_IRWXU, 0000700    /* RWX mask for owner */
 .set S_IRUSR, 0000400    /* R for owner */
 .set S_IWUSR, 0000200    /* W for owner */
@@ -17,6 +18,17 @@
 .set S_IWOTH, 0000002    /* W for other */
 .set S_IXOTH, 0000001    /* X for other */
 
+
+.macro FUNCTION_DEFINE, FUNC
+        .globl \FUNC
+        .p2align 2
+        .type \FUNC, @function
+.endmacro
+
+.macro FUNCTION_END, FUNC
+.\FUNC\()_end:
+        .size \FUNC, .\FUNC\()_end-\FUNC
+.endmacro
 
 
 .macro	INC, REG

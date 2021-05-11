@@ -2,9 +2,7 @@
 
 //makeArray16 - initialize array at location. X0 - location, X1 - length. (ocasionally, we use 16 bit array, so here we go)
 	.text
-	.p2align 2
-	.globl makeArray16
-	.type makeArray16, @function
+FUNCTION_DEFINE	makeArray16
 makeArray16:
 	PUSHTEMP
 	MOV	X19, X0
@@ -19,14 +17,10 @@ cycle:
 	MOV	X0, X19
 	POPTEMP
 	RET
-
-.makeArray16_end:
-	.size makeArray16, .makeArray16_end-makeArray16
+FUNCTION_END	makeArray16
 
 //getArr16Element - get element and store it in X0. X0 - location, X1 - index
-	.p2align 2
-	.globl getArr16Element
-	.type getArr16Element, @function
+FUNCTION_DEFINE	getArr16Element
 getArr16Element:
 	PUSHTEMP
 	MOV	X19, X0
@@ -37,12 +31,10 @@ getArr16Element:
 	LDURH	W0, [X19]
 	POPTEMP
 	RET
-.getArr16Element_end:
-	.size getArr16Element, .getArr16Element_end-getArr16Element
+FUNCTION_END	getArr16Element
 
-	.p2align 2
-	.globl setArr16Element
-	.type setArr16Element, @function
+
+FUNCTION_DEFINE	setArr16Element
 setArr16Element:
 	PUSHTEMP
 	MOV	X19, X0
@@ -53,8 +45,5 @@ setArr16Element:
 	STURH 	W2, [X19]
 	POPTEMP
 	RET
-.setArr16Element_end:
-	.size setArr16Element, .setArr16Element_end-setArr16Element
-
-	
+FUNCTION_END	setArr16Element
 

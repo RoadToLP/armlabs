@@ -1,9 +1,7 @@
 .include "asm/macro.s"
 
 	.text
-	.globl genMatrix
-	.p2align 2
-	.type genMatrix, @function
+FUNCTION_DEFINE genMatrix
 
 /* genMatrix - initialize matrix (loc, width, height)
  * So basically,  we have array of arrays, each element points to column (handy with our task)
@@ -42,14 +40,10 @@ genMatrix_loop:
 	MOV	X0, X28
 	POPTEMP
 	RET
-.genMatrix_end:
-	.size genMatrix, .genMatrix_end-genMatrix
-
+FUNCTION_END	genMatrix
 	
 //sortMatrix - sort colums of matrix(less gooo). X0 - matrix, X1 - width, X2 - height
-	.globl sortMatrix
-	.p2align 2
-	.type sortMatrix, @function
+FUNCTION_DEFINE sortMatrix
 sortMatrix:
 	PUSHTEMP
 	MOV	X19, X0
@@ -65,10 +59,7 @@ sortMatrix_loop:
 	BNE	sortMatrix_loop
 	POPTEMP
 	RET
-.sortMatrix_end:
-	.size sortMatrix, .sortMatrix_end-sortMatrix
-	
-	
+FUNCTION_END	sortMatrix
 
 
 	

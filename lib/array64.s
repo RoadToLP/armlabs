@@ -2,9 +2,7 @@
 
 //makeArray16 - initialize array at location. X0 - location, X1 - length. (ocasionally, we use 16 bit array, so here we go)
 	.text
-	.p2align 2
-	.globl makeArray64
-	.type makeArray64, @function
+FUNCTION_DEFINE makeArray64
 makeArray64:
 	PUSHTEMP
 	CMP	X1, #0
@@ -23,13 +21,10 @@ makeArray64_ret:
 	POPTEMP
 	RET
 
-.makeArray64_end:
-	.size makeArray64, .makeArray64_end-makeArray64
+FUNCTION_END	makeArray64
 
 //getArr64Element - get element and store it in X0. X0 - location, X1 - index
-	.p2align 2
-	.globl getArr64Element
-	.type getArr64Element, @function
+FUNCTION_DEFINE	getArr64Element
 getArr64Element:
 	PUSHTEMP
 	MOV	X19, X0
@@ -40,12 +35,10 @@ getArr64Element:
 	LDR	X0, [X19]
 	POPTEMP
 	RET
-.getArr64Element_end:
-	.size getArr64Element, .getArr64Element_end-getArr64Element
+FUNCTION_END	getArr64Element
 
-	.p2align 2
-	.globl setArr64Element
-	.type setArr64Element, @function
+
+FUNCTION_DEFINE	setArr64Element
 setArr64Element:
 	PUSHTEMP
 	MOV	X19, X0
@@ -56,8 +49,6 @@ setArr64Element:
 	STR 	X2, [X19]
 	POPTEMP
 	RET
-.setArr64Element_end:
-	.size setArr64Element, .setArr64Element_end-setArr64Element
-
+FUNCTION_END	setArr64Element
 	
 

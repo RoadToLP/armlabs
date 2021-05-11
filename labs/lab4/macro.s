@@ -2,6 +2,7 @@
 .set	O_WRONLY,	1
 .set	O_RDWR,		2
 .set 	O_CREAT,	64
+.set 	O_TRUNC,	01000
 .set S_IRWXU, 0000700    /* RWX mask for owner */
 .set S_IRUSR, 0000400    /* R for owner */
 .set S_IWUSR, 0000200    /* W for owner */
@@ -100,8 +101,8 @@
 .endmacro
 
 .macro  MOVA, REG, VAL
-	MOV	\REG, #\VAL
-	MOVK	\REG, #\VAL>>16, lsl #16
-	MOVK	\REG, #\VAL>>32, lsl #32
+	MOV	\REG, #\VAL<<48>>48
+	MOVK	\REG, #\VAL<<32>>48, lsl #16
+	MOVK	\REG, #\VAL<<16>>48, lsl #32
 	MOVK	\REG, #\VAL>>48, lsl #48
 .endmacro

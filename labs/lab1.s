@@ -33,27 +33,31 @@ _start:
 	LDRH	W22, [X0]
 	ADR	X0, e
 	LDR	W23, [X0]
-	MOV	X24, X19
-	MUL	X24, X24, X21
+	MOV	W24, W19
+	MUL	W24, W24, W21
 	BVS	overflow
-	SDIV	X24, X24, X20
-	MOV	X25, X22
-	MUL	X25, X25, X20
+	UDIV	W24, W24, W20
+	MOV	W25, W22
+	MUL	W25, W25, W20
 	BVS	overflow
-	SDIV	X25, X25, X23
-	MOV	X0, X21
+	UDIV	W25, W25, W23
+	BVS	overflow
+	MOV	W0, W21
 	MOV	X1, #2
 	BL	pow
 	CMP	X8, 1
 	BEQ	overflow
-	MOV	X26, X0
-	MOV	X27, X19
-	MUL	X27, X27, X22
+	MOV	W26, W0
+	MOV	W27, W19
+	MUL	W27, W27, W22
 	BVS	overflow
-	SDIV	X26, X26, X27
-	MOV	X0, X24
-	ADD	X0, X0, X25
-	SUB	X0, X0, X26
+	SDIV	W26, W26, W27
+	BVS	overflow
+	MOV	W0, W24
+	ADD	W0, W0, W25
+	BVS	overflow
+	SUB	W0, W0, W26
+	BVS	overflow
 	MOV	X1, SP
 	BL	itos
 	BL	puts
