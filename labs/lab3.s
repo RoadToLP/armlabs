@@ -49,30 +49,48 @@ open_pass:			//now we are talking
 
 main_loop:
 	MOV	X0, #0
-	ADRP	X1, input
-	ADD	X1, X1, :lo12:input
-	PUSH	X1
-	MOV	X2, #1023
-	BL	read		//Read string, X0 holds how many bytes read
-	POP	X1
+	BL	dynRead		//Read string, X0 will contain our string
+	PUSH	X0		//Save this pointer
+	BL	strlen		//Calculate its length
 	CMP	X0, #0		//If no data read, exit
 	BEQ	success
-	MOV	X19, X1
-	ADD	X19, X19, X0
+	/* While we have string length in X0, we should allocate load of memory, like x10 of default size.
+	 * It is very inefficient, but smart allocating in array constructor is PRETTY HARD
+	 * The only reason why we should do it because of strings like
+	 * a a a a a a a a a ... and so on
+	 * Because we should store pointer to string, which is 8 bytes, and string itself, which is pretty like 2 bytes in worst scenario (a and '\0')
+	 * every this word allocates 10 bytes at least. Bigger words are better for memory, small words are pretty hard to swallow
+	 */
+	MOV	X12, X0		//Save string length
+	MOV	X1, X0
+	MOV	X0, #10
+	MUL	X1, X1, X0	//Now X1 has 10*strlen
+	MOV	X0, #0
+	MOV	X2, #3
+	MOV	X3, #34
+	MOV	X4, #-1
+	MOV	X5, #0
+	MOV	X8, #0xde
+	SVC	#0		//Invoke mmap
+	MOV	X13, X0		//Save array pointer
+	MOV	X0, X12		//Reload string length
+	MOV	X19, X0
+	POP	X0
+	ADD	X19, X19, X0	//Now we have end of string
 	DEC	X19
 	LDRB	W8, [X19]	//Get last symbol of string
 	CMP	W8, '\n'	//Check if it is newline
 	BEQ	newline_present
 	INC	X10 		//After that cycle, we will exit
 newline_present:
-	MOV	X0, X1
+	MOV	X14, X0		//Now save string pointer because we should munmap it
+	//X0 contains pointer to string
 	PUSH	X0
 	MOV	X1, ' '
 	BL	strcnt		//get number of words
 	MOV	X9, X0
 	POP	X0
-	ADRP	X2, arr
-	ADD	X2, X2, :lo12:arr
+	MOV	X2, X13
 	BL	strsplit	//Finally split
 	PUSH	X0
 	MOV	X11, #0
@@ -100,8 +118,29 @@ line_end:
 	POP	X0
 	MOV	X1, X9
 	MOV	X2, ' '
-	ADRP	X3, res
-	ADD	X3, X3, :lo12:res
+	//So now we should allocate memory for resulting string. It should be at most length of initial string
+	PUSH	X0
+	PUSH	X1
+	PUSH	X2
+	PUSH	X3
+	PUSH	X4
+	PUSH	X5
+	MOV	X0, #0
+	MOV	X1, X12
+	MOV	X2, #3
+	MOV	X3, #34
+	MOV	X4, #-1		//Pretty mess
+	MOV	X5, #0
+	MOV	X8, #0xde
+	SVC	#0
+	MOV	X15, X0
+	POP	X5
+	POP	X4
+	POP	X3
+	POP	X2
+	POP	X1
+	POP	X0
+	MOV	X3, X15
 	BL	strmerge
 	//Merged. Check its LENGTH
 	PUSH	X0
@@ -119,18 +158,20 @@ line_end:
 	MOV	X2, #1
 	BL	write
 	//Make cleanup
-	ADRP	X0, input
-	ADD	X0, X0, :lo12:input
-	MOV	X1, #0
-	MOV	X2, 1024
-	BL	memset
-	ADRP	X0, res
-	ADD	X0, X0, :lo12:res
-	BL	memset
-	ADRP	X0, arr
-	ADD	X0, X0, :lo12:arr
-	MOV	X2, 10240
-	BL	memset
+	//Cleanup more line MUNMAP
+	MOV	X0, X14
+	MOV	X1, X12
+	MOV	X8, #0xd7
+	SVC	#0
+	MOV	X0, X15
+	MOV	X1, X12
+	MOV	X8, #0xd7
+	SVC	#0
+	MOV	X1, #10
+	MUL	X1, X12, X1
+	MOV	X0, X13
+	MOV	X8, #0xd7
+	SVC	#0
 	//And reset
 
 	B	main_loop	//finally

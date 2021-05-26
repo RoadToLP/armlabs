@@ -20,7 +20,7 @@ e:	.int 10
 	.text
 	.globl	_start
 	.p2align 2
-	.type main,@function
+	.type _start,@function
 _start:
 	SUB	SP, SP, #8
 	ADR	X0, a
@@ -45,7 +45,7 @@ _start:
 	MOV	W0, W21
 	MOV	X1, #2
 	BL	pow
-	CMP	X8, 1
+	CMP	X0, #-1
 	BEQ	overflow
 	MOV	W26, W0
 	MOV	W27, W19

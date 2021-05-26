@@ -277,6 +277,7 @@ strmerge:
 	MOV	X22, X3
 	MOV	X23, XZR
 	MOV	X24, XZR	//This will signalize that last word was skipped
+	MOV	X25, XZR	//Count how many words were actually non-zero
 strmerge_loop:
 	MOV	X0, X19
 	MOV	X1, X23
@@ -289,6 +290,7 @@ strmerge_loop:
 	BEQ 	strmerge_ret
 	B	strmerge_loop
 strmerge_cont:
+	INC	X25
 	MOV	X24, #0
 	MOV	X1, X0
 	MOV	X0, X22
@@ -301,6 +303,8 @@ strmerge_cont:
 	INC	X22
 	B 	strmerge_loop
 strmerge_ret:
+	CMP	X25, #0
+	BEQ	strmerge_realret
 	CMP	X24, #0
 	BEQ	strmerge_realret
 	DEC	X22

@@ -16,8 +16,7 @@ pow:
         POPTEMP
         RET
 powFail:
-	MOV	X8, #1
-	MOV	X0, XZR
+	MOV	X0, #-1
 	POPTEMP
 	RET
 FUNCTION_END	pow

@@ -10,8 +10,12 @@ _start:
 	ADD	X0, X0, :lo12:hello
 	BL	puts
 	BL	nextInt
+	CMP	X0, #0
+	BEQ	_start_exit
 	PUSH	X0
 	BL	nextInt
+	CMP	X0, #0
+	BEQ	_start_exit
 	PUSH	X0
 	ADRP 	X0, matrix
 	ADD	X0, X0, :lo12:matrix
@@ -80,6 +84,7 @@ outRow:
 	INC	X20
 	CMP	X20, X23
 	BNE 	outRow
+_start_exit:
 	MOV	X0, #0
 	BL	exit
 		
