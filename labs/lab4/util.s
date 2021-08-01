@@ -14,21 +14,30 @@ customTan:
 	FMOV	D19, D0
 	FMOV	D20, D1
 	MOV	X19, X0
-	MOV	X28, #1 	//counter
+	MOV	X28, #2 	//counter
 	MOV	X20, #2
+	MOV	X0, #-2
+	SCVTF	D24, X0	
+	FMUL	D24, D24, D19	//D24 will contain incrementable part of particial sum
 	SCVTF	D27, X28
-	FMOV	D28, XZR
-customTan_cycle:	
+	FMOV	D28, D0
+customTan_cycle:
+	MOV	X0, #-4
+	SCVTF	D0, X0
+	FMUL	D24, D24, D0
+	MOV	X0, X28
+	MUL	X0, X0, X20
+	SCVTF	D0, X0
+	FDIV	D24, D24, D0
+	DEC	X0
+	SCVTF	D0, X0
+	FDIV	D24, D24, D0
+	FMUL	D24, D24, D19
+	FMUL	D24, D24, D19
+
 	MUL	X0, X28, X20 	//2n
 	BL	bernoulliNumber //B_2n
 	FMOV	D21, D0 	//D21 - B_2n
-	MOV	X0, #-4
-	SCVTF	D0, X0
-	SCVTF	D1, X28
-	PUSHTEMP
-	BL	pow
-	POPTEMP
-	FMUL	D21, D21, D0 	//D21 - B_2n*(-4)^n
 	MOV	X0, #1
 	SCVTF	D22, X0		//D22 - 1
 	MOV	X0, #4
@@ -38,23 +47,9 @@ customTan_cycle:
 	BL	pow
 	POPTEMP
 	FSUB	D22, D22, D0	//D22 - 1-4^n
-	FMUL	D21, D21, D22 	//D21 - (b_2n*(-4)^n*(1-4^n))
-	SCVTF	D0, X28
-	FADD	D0, D0, D0
-	FADD	D0, D0, D27
-	PUSHTEMP
-	BL	tgamma
-	POPTEMP
-	FDIV	D21, D21, D0	//D21 - D21/(2n!)
-	MUL	X0, X28, X20	//X0  - 2n
-	DEC	X0		//X0  - 2n-1
-	SCVTF	D1, X0		//D1  - 2n-1
-	FMOV	D0, D19		//D0  - x
-	PUSHTEMP
-	BL	pow
-	POPTEMP
-	FMUL	D21, D21, D0 	//D21  - D21 * x^(2n-1)
-	FADD	D28, D28, D21	
+	FMUL	D21, D21, D22 	//D21 - (b_2n*(1-4^n))
+	FMUL	D21, D24, D21
+	FADD	D28, D28, D21
 	ADR	X0, result
 	MOV	X1, #127
 	ADR	X2, fresult
@@ -245,7 +240,7 @@ FUNCTION_END bernoulliNumber
 
 
 fresult:
-	.asciz "%d: tan(%lf) = %lf. Serie element - %lf\n"
+	.asciz "%d: tan(%.10lf) = %lf. Serie element - %.10lf\n"
 	.size fresult, 41
 
 	.type result, @object

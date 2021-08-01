@@ -53,10 +53,11 @@ sortMatrix_loop:
 	LDR	X0, [X19]
 	MOV	X1, X21
 	BL	sort16
-	ADD	X19, X19, #8
+	ADD	X19, X19, #16
 	DEC	X20
-	CMP 	X20, #0
-	BNE	sortMatrix_loop
+	DEC	X20
+	CMP 	X20, #1
+	BGT	sortMatrix_loop
 	POPTEMP
 	RET
 FUNCTION_END	sortMatrix

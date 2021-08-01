@@ -87,7 +87,7 @@ help:
 
 
 foutput:
-	.asciz "tan(%lf) from libm: %lf\nOurs tan(%lf): %lf\n"
+	.asciz "tan(%.10lf) from libm: %.10lf\nOurs tan(%.10lf): %.10lf\n"
 	.size foutput, 44
 
 flog:	
